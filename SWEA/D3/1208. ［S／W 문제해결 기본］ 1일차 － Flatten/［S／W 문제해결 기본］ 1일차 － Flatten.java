@@ -1,33 +1,42 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int arr[] = new int[100];
-		StringBuilder sb = new StringBuilder();
-		
-		for(int tc = 1; tc <= 10; tc++) {
-			int maxDump = Integer.parseInt(br.readLine());
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			
-			for(int i = 0; i < 100; i++) {
-				arr[i] = Integer.parseInt(st.nextToken());
-			}
-						
-			while(maxDump-- > 0) {
-				Arrays.sort(arr);
-				arr[arr.length - 1]--;
-				arr[0]++;
-			}
-			
-			Arrays.sort(arr);
-			int result = arr[arr.length - 1] - arr[0];
-			sb.append("#" + tc + " " + result).append("\n");
-		}
-		
-		System.out.println(sb);
-	}
+        for (int tc = 1; tc <= 10; tc++) {
+            int dump = Integer.parseInt(br.readLine());
+            int[] heightCount = new int[101]; // 높이 범위는 1 ~ 100
 
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < 100; i++) {
+                int h = Integer.parseInt(st.nextToken());
+                heightCount[h]++;
+            }
+
+            int min = 1;
+            int max = 100;
+
+            while (dump-- > 0) {
+                while (heightCount[max] == 0) max--;
+                while (heightCount[min] == 0) min++;
+                
+                if (max - min <= 1) break; // 더 이상 평탄화 불가
+
+                heightCount[max]--;
+                heightCount[max - 1]++;
+                heightCount[min]--;
+                heightCount[min + 1]++;
+            }
+
+            while (heightCount[max] == 0) max--;
+            while (heightCount[min] == 0) min++;
+
+            sb.append("#").append(tc).append(" ").append(max - min).append("\n");
+        }
+
+        System.out.print(sb);
+    }
 }
